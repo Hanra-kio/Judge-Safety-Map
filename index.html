@@ -1,0 +1,365 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Judge Safety Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --sunk:#EEF1F5; --ink:#16202B; --muted:#5A6675; --line:#D8DEE6;
+  --accent:#2F5D8A; --accentt:#E8EEF5;
+  --c1:#1B7F67; --c1t:#E4F4EF;
+  --c2:#B8531F; --c2t:#FBEDE5;
+  --c3:#A96F12; --c3t:#FDF4E3;
+  --c4:#7A4FB5; --c4t:#F1EBFA;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10151B; --surface:#171E27; --sunk:#1D2530; --ink:#E6EBF1; --muted:#9AA6B4; --line:#2B3542;
+    --accent:#7FA9D6; --accentt:#1A2533;
+    --c1:#4CC3A0; --c1t:#15302A;
+    --c2:#EB8A5E; --c2t:#3A2419;
+    --c3:#E3AC4E; --c3t:#33280F;
+    --c4:#AE8FE3; --c4t:#2A2140;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10151B; --surface:#171E27; --sunk:#1D2530; --ink:#E6EBF1; --muted:#9AA6B4; --line:#2B3542;
+  --accent:#7FA9D6; --accentt:#1A2533;
+  --c1:#4CC3A0; --c1t:#15302A;
+  --c2:#EB8A5E; --c2t:#3A2419;
+  --c3:#E3AC4E; --c3t:#33280F;
+  --c4:#AE8FE3; --c4t:#2A2140;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:32px 64px;display:flex;flex-direction:column;gap:36px}
+h1,h2{margin:0;line-height:1.3;text-wrap:balance}
+h1{font-size:27px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:600}
+p{margin:0}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+header,section{display:flex;flex-direction:column;gap:10px}
+.thesis{font-size:17px;line-height:1.55;max-width:60ch;border-left:3px solid var(--accent);padding-left:14px}
+.thesis b{font-weight:600}
+.thesis .k1{color:var(--c1)} .thesis .k2{color:var(--c2)} .thesis .k3{color:var(--c3)} .thesis .k4{color:var(--c4)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+svg text{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo",system-ui,sans-serif}
+.judge{fill:var(--sunk);stroke:var(--ink);stroke-width:1.6}
+.verdict{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.t-judge{fill:var(--ink);font-size:18px;font-weight:700}
+.t-title{fill:var(--ink);font-size:15px;font-weight:600}
+.t-group{fill:var(--muted);font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
+.t-sub{fill:var(--muted);font-size:12.5px}
+.t-edge{fill:var(--muted);font-size:12px}
+.box{stroke-width:1.5}
+.b1{fill:var(--c1t);stroke:var(--c1)} .b2{fill:var(--c2t);stroke:var(--c2)}
+.b3{fill:var(--c3t);stroke:var(--c3)} .b4{fill:var(--c4t);stroke:var(--c4)}
+.h1{fill:var(--c1)} .h2{fill:var(--c2)} .h3{fill:var(--c3)} .h4{fill:var(--c4)}
+.t-cat{font-size:13px;font-weight:600}
+.t-paper{fill:var(--ink);font-size:13.5px;font-weight:500}
+.bracket{stroke:var(--muted);stroke-width:1.2;fill:none}
+.edge{stroke:var(--muted);stroke-width:1.6;fill:none}
+.edge-u{stroke:var(--c4);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.ah{fill:var(--muted)} .ah-u{fill:var(--c4)} .ah-l{fill:var(--accent)}
+.edge-loop{stroke:var(--accent);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.t-loop{fill:var(--accent);font-size:12px;font-weight:500}
+.slot{fill:none;stroke:var(--c4);stroke-width:1.2;stroke-dasharray:5 4}
+.b5{fill:var(--accentt);stroke:var(--accent)}
+.tg-e rect{fill:var(--sunk);stroke:var(--line)} .tg-e text{fill:var(--muted)}
+.tg-t rect{fill:var(--accentt);stroke:var(--accent)} .tg-t text{fill:var(--accent)}
+.tg-e text,.tg-t text{font-size:11px;font-weight:600}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:0 7px;border-radius:999px;border:1px solid;margin-left:6px;vertical-align:1px;line-height:1.6}
+.pill.e{color:var(--muted);background:var(--sunk);border-color:var(--line)}
+.pill.t{color:var(--accent);background:var(--accentt);border-color:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted);padding-top:10px}
+.legend .pill{margin-left:0;margin-right:6px}
+.t-frame{fill:var(--accent);font-size:14px;font-weight:600}
+.slot-a{fill:none;stroke:var(--accent);stroke-width:1.2;stroke-dasharray:5 4}
+.slot-j{fill:none;stroke:var(--c3);stroke-width:1.2;stroke-dasharray:5 4}
+
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line);font-size:14px}
+thead th{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.03em}
+td.rel{font-weight:600;white-space:nowrap;background:var(--sunk)}
+td.rel small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+td.cat{font-weight:600;white-space:nowrap}
+td.cat .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:1px}
+td.def{color:var(--muted);width:26%}
+.paper{font-weight:500}
+.one{color:var(--muted);font-size:13.5px}
+.one + .paper{margin-top:10px}
+
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.how div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.how b{font-size:14px}
+.how p{font-size:13.5px;color:var(--muted)}
+.attr{min-width:1800px}
+.attr td.res{min-width:260px;color:var(--ink)}
+.attr th,.attr td{font-size:12.5px;padding:8px 10px;line-height:1.45}
+.attr td.nm{font-weight:600;min-width:170px}
+.attr small.seed,.attr small.add{display:inline-block;font-size:11px;font-weight:600;padding:0 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:4px}
+.attr small.seed{border-color:var(--ink);color:var(--ink)}
+svg a:hover text.t-paper{text-decoration:underline}
+.ins-grid{display:grid;gap:12px}
+.ins{background:var(--surface);border:1px solid var(--line);border-left:4px solid;border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:14px}
+.ins-head{display:flex;align-items:center;gap:10px}
+.ins-box{font-weight:700;font-size:15px}
+.ins-tag{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.ins-item b{font-size:14.5px;font-weight:600}
+.ins-item ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.ins-item li{font-size:13.5px;color:var(--muted)}
+.ins-item li i{color:var(--ink);font-style:normal;font-weight:500}
+.attr tr.grp td{background:var(--sunk);font-weight:700;font-size:13.5px;padding:10px 12px}
+.attr tr.grp td small{font-weight:500;color:var(--muted);margin-left:6px}
+footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Research map · 2026-09-30 · seed 4편 · 추가 16편</span>
+  <h1>Judge가 흔들릴 수 있는 네 가지 상황</h1>
+  <p class="thesis">judge는 <b>보는 것</b>(<b class="k1">평가할 출력</b>, <b class="k2">평가 기준</b>)에 속거나, <b class="k4">말 거는 쪽</b>(user, 다른 judge)에 휘둘리거나, <b class="k3">자기 자신</b>(타고난 한계, 심어진 결함) 때문에 흔들린다. 그리고 <b style="color:var(--accent)">평가 방식</b> 자체가 판정을 바꾸기도 한다.</p>
+</header>
+
+<section>
+  <h2>구조</h2>
+  <div class="panel scroll">
+    <svg viewBox="0 0 920 670" width="100%" style="min-width:760px;display:block" role="img" aria-label="구조도: 왼쪽 평가할 출력(Gaming the Judge, Debate, BITE, Style Over Substance, Multimodal LLM Judges)과 오른쪽 평가 기준(ImpossibleRubrics, Reward Hacking in Rubric-Based RL, Rubric Artifacts, Rubrics as an Attack Surface)이 가운데 judge로 들어간다. judge 안은 타고난 한계(QEDBench, Judging Against the Reference, Time to REFLECT, Self-Preference Bias 논문)와 심어진 결함(학습 시점 오염: BadJudge)으로 나뉜다. judge 위에는 평가 방식(JudgeSense, Am I More Pointwise or Pairwise?, Agreement Overstates Evidence)이, 아래에는 상대와의 interaction(Jagged Judges, Stability vs. Manipulability, Social Pressure Breaks Majority Voting)이 있고 둘 다 judge로 들어간다. 판정은 왼쪽 위 작은 칸으로 나가고, reward로 쓰이면 바로 아래 평가할 출력으로 되돌아간다">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+        <marker id="arl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-l"/></marker>
+      </defs>
+
+      <g transform="translate(0,40)">
+      <!-- verdict (small) + reward loop -->
+      <rect x="20" y="40" width="172" height="40" rx="20" class="verdict"/>
+      <text x="106" y="65" text-anchor="middle" class="t-title" style="font-size:14px">판정 · 점수 · reward</text>
+      <path d="M70,80 V166" class="edge-loop" marker-end="url(#arl)"/>
+      <text x="82" y="118" class="t-loop">Reward로 쓰이면</text>
+      <text x="82" y="135" class="t-loop">모델이 출력을 judge에 맞춤</text>
+
+      </g>
+
+      <!-- 평가 방식 (top) -->
+      <rect x="305" y="8" width="310" height="152" rx="10" class="box b5"/>
+      <text x="321" y="30" class="t-title">평가 방식</text>
+      <text x="321" y="48" class="t-sub">평가를 어떻게 설정하느냐만으로 판정이 달라질 때</text>
+      <circle cx="327" cy="65" r="4" style="fill:var(--accent)"/><a href="https://arxiv.org/abs/2604.23478" target="_blank" rel="noopener"><text x="339" y="70" class="t-paper">JudgeSense</text></a><text x="421" y="70" class="t-sub">(추가 논문)</text><g class="tg-e"><rect x="572" y="57" width="34" height="18" rx="9"/><text x="589" y="70" text-anchor="middle">평가</text></g>
+      <circle cx="327" cy="89" r="4" style="fill:var(--accent)"/><a href="https://arxiv.org/abs/2602.02219" target="_blank" rel="noopener"><text x="339" y="94" class="t-paper">Am I More Pointwise or Pairwise?</text></a><g class="tg-e"><rect x="572" y="81" width="34" height="18" rx="9"/><text x="589" y="94" text-anchor="middle">평가</text></g>
+      <text x="339" y="111" class="t-sub">(추가 논문)</text>
+      <circle cx="327" cy="128" r="4" style="fill:var(--accent)"/><a href="https://arxiv.org/abs/2609.22512" target="_blank" rel="noopener"><text x="339" y="133" class="t-paper">Agreement Overstates Evidence</text></a><g class="tg-e"><rect x="572" y="120" width="34" height="18" rx="9"/><text x="589" y="133" text-anchor="middle">평가</text></g>
+      <text x="339" y="150" class="t-sub">(추가 논문)</text>
+      <text x="622" y="28" class="t-group">평가 설정</text>
+      <path d="M460,160 V176" class="edge" marker-end="url(#ar)"/>
+
+      <g transform="translate(0,40)">
+      <!-- A -->
+      <rect x="20" y="170" width="248" height="254" rx="10" class="box b1"/>
+      <text x="36" y="196" class="t-title">평가할 출력</text>
+      <text x="36" y="216" class="t-sub">모델의 출력이 judge를 오도할 때</text>
+      <circle cx="42" cy="246" r="4" class="h1"/><a href="https://arxiv.org/abs/2601.14691" target="_blank" rel="noopener"><text x="54" y="251" class="t-paper">Gaming the Judge</text></a><g class="tg-e"><rect x="228" y="238" width="34" height="18" rx="9"/><text x="245" y="251" text-anchor="middle">평가</text></g>
+      <circle cx="42" cy="272" r="4" class="h1"/><a href="https://arxiv.org/abs/2608.17776" target="_blank" rel="noopener"><text x="54" y="277" class="t-paper">Debate</text></a><g class="tg-t"><rect x="228" y="264" width="34" height="18" rx="9"/><text x="245" y="277" text-anchor="middle">학습</text></g>
+      <circle cx="42" cy="298" r="4" class="h1"/><a href="https://arxiv.org/abs/2605.26156" target="_blank" rel="noopener"><text x="54" y="303" class="t-paper">BITE</text></a><text x="94" y="303" class="t-sub">(추가 논문)</text><g class="tg-e"><rect x="228" y="290" width="34" height="18" rx="9"/><text x="245" y="303" text-anchor="middle">평가</text></g>
+      <circle cx="42" cy="324" r="4" class="h1"/><a href="https://arxiv.org/abs/2609.08236" target="_blank" rel="noopener"><text x="54" y="329" class="t-paper">Style Over Substance</text></a><g class="tg-e"><rect x="228" y="316" width="34" height="18" rx="9"/><text x="245" y="329" text-anchor="middle">평가</text></g>
+      <text x="54" y="346" class="t-sub">(추가 논문)</text>
+      <circle cx="42" cy="363" r="4" class="h1"/><a href="https://arxiv.org/abs/2606.15608" target="_blank" rel="noopener"><text x="54" y="368" class="t-paper">Multimodal LLM Judges</text></a><g class="tg-e"><rect x="228" y="355" width="34" height="18" rx="9"/><text x="245" y="368" text-anchor="middle">평가</text></g>
+      <text x="54" y="385" class="t-sub">(추가 논문)</text>
+      <text x="20" y="444" class="t-group">JUDGE가 보는 것</text>
+
+      <!-- B -->
+      <rect x="660" y="170" width="240" height="254" rx="10" class="box b2"/>
+      <text x="676" y="196" class="t-title">평가 기준</text>
+      <text x="676" y="216" class="t-sub">기준 자체에 결함이 있을 때</text>
+      <circle cx="682" cy="246" r="4" class="h2"/><a href="https://arxiv.org/abs/2609.16816" target="_blank" rel="noopener"><text x="694" y="251" class="t-paper">ImpossibleRubrics</text></a><g class="tg-t"><rect x="860" y="238" width="34" height="18" rx="9"/><text x="877" y="251" text-anchor="middle">학습</text></g>
+      <circle cx="682" cy="272" r="4" class="h2"/><a href="https://arxiv.org/abs/2605.12474" target="_blank" rel="noopener"><text x="694" y="277" class="t-paper">Reward Hacking in</text></a><g class="tg-t"><rect x="860" y="264" width="34" height="18" rx="9"/><text x="877" y="277" text-anchor="middle">학습</text></g>
+      <a href="https://arxiv.org/abs/2605.12474" target="_blank" rel="noopener"><text x="694" y="294" class="t-paper">Rubric-Based RL</text></a><text x="810" y="294" class="t-sub">(추가 논문)</text>
+      <circle cx="682" cy="316" r="4" class="h2"/><a href="https://arxiv.org/abs/2609.02942" target="_blank" rel="noopener"><text x="694" y="321" class="t-paper">Rubric Artifacts</text></a><g class="tg-e"><rect x="860" y="308" width="34" height="18" rx="9"/><text x="877" y="321" text-anchor="middle">평가</text></g>
+      <text x="694" y="338" class="t-sub">(추가 논문)</text>
+      <circle cx="682" cy="355" r="4" class="h2"/><a href="https://arxiv.org/abs/2602.13576" target="_blank" rel="noopener"><text x="694" y="360" class="t-paper">Rubrics as an</text></a><g class="tg-t"><rect x="860" y="347" width="34" height="18" rx="9"/><text x="877" y="360" text-anchor="middle">학습</text></g>
+      <a href="https://arxiv.org/abs/2602.13576" target="_blank" rel="noopener"><text x="694" y="377" class="t-paper">Attack Surface</text></a><text x="804" y="377" class="t-sub">(추가 논문)</text>
+      <text x="900" y="444" text-anchor="end" class="t-group">JUDGE가 보는 것</text>
+
+      <!-- Judge -->
+      <rect x="300" y="140" width="320" height="248" rx="14" class="judge"/>
+      <text x="460" y="164" text-anchor="middle" class="t-judge">Judge 자신</text>
+      <text x="314" y="186" class="t-group" style="font-weight:700">타고난 한계</text>
+      <circle cx="320" cy="207" r="4" class="h3"/><a href="https://arxiv.org/abs/2602.20629" target="_blank" rel="noopener"><text x="332" y="212" class="t-paper">QEDBench</text></a><text x="404" y="212" class="t-sub">(추가 논문)</text><g class="tg-e"><rect x="572" y="199" width="34" height="18" rx="9"/><text x="589" y="212" text-anchor="middle">평가</text></g>
+      <circle cx="320" cy="231" r="4" class="h3"/><a href="https://arxiv.org/abs/2601.07506" target="_blank" rel="noopener"><text x="332" y="236" class="t-paper">Judging Against the Reference</text></a><g class="tg-e"><rect x="572" y="223" width="34" height="18" rx="9"/><text x="589" y="236" text-anchor="middle">평가</text></g>
+      <circle cx="320" cy="255" r="4" class="h3"/><a href="https://arxiv.org/abs/2605.19196" target="_blank" rel="noopener"><text x="332" y="260" class="t-paper">Time to REFLECT</text></a><text x="452" y="260" class="t-sub">(추가 논문)</text><g class="tg-e"><rect x="572" y="247" width="34" height="18" rx="9"/><text x="589" y="260" text-anchor="middle">평가</text></g>
+      <circle cx="320" cy="279" r="4" class="h3"/><a href="https://arxiv.org/abs/2604.22891" target="_blank" rel="noopener"><text x="332" y="284" class="t-paper">Quantifying and Mitigating</text></a><g class="tg-e"><rect x="572" y="271" width="34" height="18" rx="9"/><text x="589" y="284" text-anchor="middle">평가</text></g>
+      <a href="https://arxiv.org/abs/2604.22891" target="_blank" rel="noopener"><text x="332" y="300" class="t-paper">Self-Preference Bias of LLM Judges</text></a>
+      <text x="332" y="316" class="t-sub">(추가 논문)</text>
+      <text x="314" y="342" class="t-group" style="font-weight:700">심어진 결함</text>
+      <circle cx="320" cy="361" r="4" class="h3"/><a href="https://arxiv.org/abs/2503.00596" target="_blank" rel="noopener"><text x="332" y="366" class="t-paper">BadJudge</text></a><text x="406" y="366" class="t-sub">(추가 논문)</text><g class="tg-e"><rect x="572" y="353" width="34" height="18" rx="9"/><text x="589" y="366" text-anchor="middle">평가</text></g>
+
+      <!-- D -->
+      <rect x="300" y="430" width="320" height="186" rx="10" class="box b4"/>
+      <text x="460" y="456" text-anchor="middle" class="t-title">상대와의 interaction</text>
+      <text x="460" y="475" text-anchor="middle" class="t-sub">판정 후 user나 다른 judge의 반박·압력에 굴복할 때</text>
+      <circle cx="326" cy="512" r="4" class="h4"/><a href="https://arxiv.org/abs/2608.12645" target="_blank" rel="noopener"><text x="338" y="517" class="t-paper">Jagged Judges</text></a><text x="442" y="517" class="t-sub">(추가 논문)</text><g class="tg-e"><rect x="576" y="504" width="34" height="18" rx="9"/><text x="593" y="517" text-anchor="middle">평가</text></g>
+      <circle cx="326" cy="538" r="4" class="h4"/><a href="https://arxiv.org/abs/2606.05384" target="_blank" rel="noopener"><text x="338" y="543" class="t-paper">Stability vs. Manipulability</text></a><g class="tg-e"><rect x="576" y="530" width="34" height="18" rx="9"/><text x="593" y="543" text-anchor="middle">평가</text></g>
+      <text x="338" y="560" class="t-sub">(추가 논문)</text>
+      <circle cx="326" cy="581" r="4" class="h4"/><a href="https://arxiv.org/abs/2608.04415" target="_blank" rel="noopener"><text x="338" y="586" class="t-paper">Social Pressure Breaks</text></a><g class="tg-e"><rect x="576" y="573" width="34" height="18" rx="9"/><text x="593" y="586" text-anchor="middle">평가</text></g>
+      <a href="https://arxiv.org/abs/2608.04415" target="_blank" rel="noopener"><text x="338" y="602" class="t-paper">Majority Voting</text></a><text x="454" y="602" class="t-sub">(추가 논문)</text>
+      <text x="628" y="612" class="t-group">JUDGE에게 말 거는 쪽</text>
+
+      <!-- edges -->
+      <path d="M268,260 H296" class="edge" marker-end="url(#ar)"/>
+      <path d="M660,260 H624" class="edge" marker-end="url(#ar)"/>
+      <path d="M300,152 C250,152 232,60 196,60" class="edge" marker-end="url(#ar)"/>
+      <path d="M460,430 V392" class="edge" marker-end="url(#ar)"/>
+      </g>
+    </svg>
+    <div class="legend">
+      <span>논문 이름을 누르면 arXiv가 열립니다</span>
+      <span><span class="pill e">평가</span>판정만 내리는 상황</span>
+      <span><span class="pill t">학습</span>판정이 reward로 쓰여 모델이 학습되는 상황</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>논문 속성표</h2>
+  <div class="panel scroll">
+    <table class="attr">
+      <thead><tr><th>논문</th><th>칸</th><th>흔드는 요인</th><th>핵심 결과</th><th>judge 종류</th><th>과제 도메인</th><th>공격자</th><th>용도</th><th>대응책</th><th>출처·시기</th></tr></thead>
+      <tbody>
+        <tr class="grp"><td colspan="10" style="border-left:4px solid var(--c1)"><span style="color:var(--c1)">평가할 출력</span> <small>5편</small></td></tr>
+        <tr><td class="nm">Gaming the Judge <small class="seed">seed</small></td><td>평가할 출력</td><td>agent의 CoT 재작성 (행동·관찰은 고정; 문체 2종·내용 3종)</td><td class="res">agent의 CoT만 바꿔도 judge가 실패한 과제를 성공으로 판정하는 비율이 크게 오름</td><td>agent 궤적 judge (VLM 9종)</td><td>web agent (궤적 800개; AgentRewardBench 등)</td><td>외부 (연구자가 사후 재작성; 위협 모델은 agent 자신)</td><td>평가</td><td>시도했지만 한계 (경고 prompt·rubric·judge-time scaling; recall 하락)</td><td>arXiv 2026.01</td></tr>
+        <tr><td class="nm">Debate Training Reduces Reward Hacking in RLAIF <small class="seed">seed</small></td><td>평가할 출력</td><td>RL 중 모델이 배운 해킹 문구 (judge 사칭·권위적 표현) + critic의 장황함·허위 인용</td><td class="res">약한 judge로 RL을 하면 모델이 judge를 속이도록 학습되는데, debate 구조로 학습하면 이런 reward hacking이 줄어듦</td><td>reward·verifier (Gemini 2.5 Flash Lite 고정)</td><td>수학 (AIME류 비공개 데이터)</td><td>평가받는 모델 자신 (RL)</td><td>학습</td><td>제안 (debate + critique 길이 제한)</td><td>arXiv 2026.08 (Google DeepMind)</td></tr>
+        <tr><td class="nm">Turning Bias into Bugs (BITE) <small class="add">추가</small></td><td>평가할 출력</td><td>문체·형식 편집 8종 (가짜 인용·동조 문구 포함); judge 점수를 보며 탐색</td><td class="res">문체·형식을 바꾸거나 가짜 인용·동조 문구를 넣어 judge 점수를 올림 (공격 성공률 65% 이상, 기존 탐지 방법도 피함)</td><td>일반 품질 judge 5종 (pointwise·pairwise)</td><td>AlpacaEval 2.0·Arena-Hard-Auto·논문 리뷰(MLRBench)</td><td>외부</td><td>평가</td><td>시도했지만 한계 (style control·탐지 실패; prompt 무작위화로 43% 감소)</td><td>ICML 2026</td></tr>
+        <tr><td class="nm">Style Over Substance <small class="add">추가</small></td><td>평가할 출력</td><td>답 앞뒤에 붙인 고정 문구 9종 (본문은 그대로)</td><td class="res">내용은 그대로 두고 답 앞뒤에 문구만 덧붙여도, 일부 safety judge의 판정이 뒤집힘</td><td>safety judge 8종</td><td>JailbreakBench 응답 600개</td><td>외부 (고정 문구)</td><td>평가</td><td>시도했지만 한계 (채점 prompt 교체가 일부 경우 10배 감소; 다수결은 효과 없음)</td><td>arXiv 2026.09</td></tr>
+        <tr><td class="nm">On the Adversarial Robustness of Multimodal LLM Judges <small class="add">추가</small></td><td>평가할 출력</td><td>평가받는 이미지에 눈에 띄지 않는 섭동 (ε=8/255; MGSIA 등)</td><td class="res">평가받는 이미지에 눈에 띄지 않는 섭동을 넣으면 멀티모달 judge(품질·안전)의 점수가 부풀려지고, 같은 계열의 더 큰 모델에도 통함 (GPT-5·Gemini로는 거의 안 통함)</td><td>멀티모달 judge (품질·safety; LLaVA-1.5·Qwen2.5-VL 기반 + 전용 평가기)</td><td>텍스트→이미지 생성 평가 (GenAI-Bench) · 이미지 안전 (HADES·T2I-RiskyPrompt)</td><td>외부 (white·gray·black-box)</td><td>평가</td><td>시도했지만 한계 (JPEG·blur·crop·diffusion 정화 모두 효과 없음)</td><td>arXiv 2026.06 (Beihang·SMU)</td></tr>
+        <tr class="grp"><td colspan="10" style="border-left:4px solid var(--c2)"><span style="color:var(--c2)">평가 기준</span> <small>4편</small></td></tr>
+        <tr><td class="nm">ImpossibleRubrics <small class="seed">seed</small></td><td>평가 기준</td><td>LLM이 생성한 rubric (생성 모델 11종)</td><td class="res">근거로 답할 수 없는 질문에서, 자동 생성된 rubric이 근거 없이 단정한 답에 높은 점수를 줌</td><td>rubric judge (Claude Haiku; reward로 쓰는 상황 가정)</td><td>근거로 답할 수 없는 질문 169개 (불가능 유형 6가지)</td><td>외부 (Claude Opus attacker)</td><td>학습 (reward 상황을 가정; 실제 학습은 하지 않음)</td><td>시도했지만 한계 (safety 지시)</td><td>arXiv 2026.09</td></tr>
+        <tr><td class="nm">Reward Hacking in Rubric-Based RL <small class="add">추가</small></td><td>평가 기준</td><td>rubric 설계의 빈틈 + 약한 verifier</td><td class="res">rubric을 reward로 RL을 하면 모델이 rubric 설계의 빈틈을 파고들고, 검증 모델을 강하게 해도 rubric이 빠뜨린 실패는 남음</td><td>reward·verifier (GPT-4o-mini·GPT-OSS-120B)</td><td>의료·과학 QA (HealthBench로 외부 검증)</td><td>평가받는 모델 자신 (GRPO)</td><td>학습</td><td>시도했지만 한계 (강한 verifier로 감소; 조기 종료용 진단 지표)</td><td>arXiv 2026.05 (Scale AI)</td></tr>
+        <tr><td class="nm">Judging LLM-as-a-Judge: Concerning Rubric Artifacts <small class="add">추가</small></td><td>평가 기준</td><td>judge가 답보다 rubric 문장에 의존 (답·기준을 뒤집어도 판정이 잘 안 바뀜)</td><td class="res">평가할 답을 보지 않고 rubric 문장만으로도 judge 판정을 어느 정도 예측할 수 있고, 기준을 뒤집어도 judge가 판정을 제대로 바꾸지 못함</td><td>일반 품질 judge 1종 (Qwen2.5-7B)</td><td>HealthBench·ResearchRubrics</td><td>없음</td><td>평가</td><td>없음</td><td>EMNLP 2026 (arXiv 기재) · arXiv 2026.08</td></tr>
+        <tr><td class="nm">Rubrics as an Attack Surface: Stealthy Preference Drift in LLM Judges <small class="add">추가</small></td><td>평가 기준</td><td>benchmark 검증을 통과하는 자연스러운 rubric 수정 (진화 탐색; DeepSeek-V3가 편집)</td><td class="res">benchmark 검증을 통과하는 자연스러운 rubric 수정만으로 judge의 선호를 특정 방향으로 밀 수 있고(정확도 최대 27.9% 하락), 그 판정으로 학습한 모델에 bias가 그대로 옮겨감</td><td>일반 품질 judge (pairwise 선호; Qwen3-14B 주력·Gemma-3-27B·DeepSeek-V3로 전이) + reward·verifier (DPO용 선호 라벨)</td><td>helpfulness·harmlessness 선호 데이터 (UltraFeedback·ChatbotArena·RMB·hh-rlhf·PKU-SafeRLHF)</td><td>외부 (rubric 편집자; judge 내부 접근 없음)</td><td>학습 (편향된 라벨로 DPO 학습)</td><td>시도했지만 한계 (정답 일치 few-shot·judge 앙상블·다중 benchmark 검증 모두 부분적)</td><td>COLM 2026 · arXiv 2026.02 (v2 9월)</td></tr>
+        <tr class="grp"><td colspan="10" style="border-left:4px solid var(--accent)"><span style="color:var(--accent)">평가 방식</span> <small>3편</small></td></tr>
+        <tr><td class="nm">JudgeSense <small class="add">추가</small></td><td>평가 방식</td><td>평가 지시문의 표현</td><td class="res">요청을 표현만 바꿔도 판정 일치도가 떨어지고, judge들이 가장 못 푸는 과제에서 가장 크게 흔들림</td><td>일반 품질 judge 25종 (OpenAI 제외)</td><td>TruthfulQA·SummEval(coherence)·TREC-COVID·MT-Bench</td><td>없음</td><td>평가</td><td>없음</td><td>arXiv 2026.09 (v3)</td></tr>
+        <tr><td class="nm">Am I More Pointwise or Pairwise? <small class="add">추가</small></td><td>평가 방식</td><td>rubric 점수 선택지의 순서·기준의 순서</td><td class="res">rubric 채점에서 judge가 특정 위치의 점수 선택지를 선호하고, 여러 기준의 순서만 바꿔도 점수가 달라짐</td><td>일반 품질 judge 6종 (공개 모델)</td><td>MT-Bench·Vicuna-Bench·HANNA·SummEval</td><td>없음</td><td>평가</td><td>시도했지만 한계 (순서 섞기: bias가 큰 judge만 개선)</td><td>EMNLP 2026 Findings (arXiv 기재) · arXiv 2026.09 (v3)</td></tr>
+        <tr><td class="nm">Agreement Overstates Evidence <small class="add">추가</small></td><td>평가 방식</td><td>judge 오류의 상관 (다수결을 독립된 증거로 취급)</td><td class="res">judge들의 오류가 서로 얽혀 있어 judge 10개가 사실상 독립적인 judge 3.5개 수준이고, 이를 무시하면 최대 28%의 비교에서 결론이 틀림</td><td>일반 품질 judge (공개 10종·frontier 6종)</td><td>RewardBench v2·UltraFeedback·PKU-SafeRLHF·LLM-AggreFact</td><td>없음</td><td>평가 (+DPO 부분 실험)</td><td>시도했지만 한계</td><td>arXiv 2026.09</td></tr>
+        <tr class="grp"><td colspan="10" style="border-left:4px solid var(--c3)"><span style="color:var(--c3)">judge 자신 (타고난 한계)</span> <small>4편</small></td></tr>
+        <tr><td class="nm">QEDBench <small class="add">추가</small></td><td>judge 자신 (타고난 한계)</td><td>어려운 증명 + 그럴듯한 형식 (LaTeX)</td><td class="res">학부 고학년~대학원 초반 수준의 수학 증명에서 모든 judge가 사람보다 틀린 증명을 후하게 통과시키며, 가장 나은 judge도 틀린 증명의 38%를 통과시킴</td><td>일반 품질 judge 7종</td><td>대학 수학 증명 272문제 (10개 분야)</td><td>없음</td><td>평가</td><td>시도했지만 한계 (rubric 교체·엄격한 prompt 효과 없음)</td><td>ICML 2026</td></tr>
+        <tr><td class="nm">Judging Against the Reference <small class="seed">seed</small></td><td>judge 자신 (타고난 한계)</td><td>reference와 judge 지식의 충돌</td><td class="res">reference가 자기 지식과 충돌하면, judge가 reference를 무시하고 자기 지식대로 판정하는 경우가 많음</td><td>일반 품질 judge 13종</td><td>NQ-Open·PopQA·SciQ·FreshQA</td><td>없음</td><td>평가</td><td>시도했지만 한계 (prompting)</td><td>arXiv 2026.06 (v2)</td></tr>
+        <tr><td class="nm">Time to REFLECT <small class="add">추가</small></td><td>judge 자신 (타고난 한계)</td><td>연구 agent 실행 기록 속 실패 (특히 근거 문제)</td><td class="res">research agent의 실행 기록을 평가할 때 기본 평가 방식에서는 가장 좋은 judge도 정확도가 55%에 못 미치고, 특히 근거 검증에 약함</td><td>agent 궤적 judge 14종 (+보고서 평가)</td><td>연구 agent (DR.TULU·Tongyi DeepResearch)</td><td>없음</td><td>평가</td><td>시도했지만 한계 (세분화 평가로 개선되나 정확도 55% 내외)</td><td>arXiv 2026.05 (Yale·IBM)</td></tr>
+        <tr><td class="nm">Quantifying and Mitigating Self-Preference Bias of LLM Judges <small class="add">추가</small></td><td>judge 자신 (타고난 한계)</td><td>judge 자신이 만든 답 (편애·기피 양방향)</td><td class="res">judge가 자기가 만든 답을 체계적으로 편애하거나 기피하고, 능력이 좋은 모델이라고 이 bias가 적지 않음</td><td>일반 품질 judge 20종</td><td>AlpacaEval 지시 100개</td><td>없음</td><td>평가</td><td>제안 (구조화된 다차원 평가; 평균 31.5% 감소)</td><td>arXiv 2026.06 (v4)</td></tr>
+        <tr class="grp"><td colspan="10" style="border-left:4px solid var(--c3)"><span style="color:var(--c3)">judge 자신 (심어진 결함)</span> <small>1편</small></td></tr>
+        <tr><td class="nm">BadJudge <small class="add">추가</small></td><td>judge 자신 (심어진 결함)</td><td>학습 데이터의 backdoor + trigger</td><td class="res">judge 학습 데이터에 backdoor를 심으면 공격자 모델의 점수가 부풀려짐 (가장 강한 조건에서 1% 오염으로 3배)</td><td>일반 품질 judge·safety judge (+BERT reranker)</td><td>MT-Bench 평가·독성 분류·MS MARCO 검색</td><td>외부 (평가받는 모델의 개발자)</td><td>평가</td><td>제안 (model merging)</td><td>ICLR 2025</td></tr>
+        <tr class="grp"><td colspan="10" style="border-left:4px solid var(--c4)"><span style="color:var(--c4)">상대와의 interaction</span> <small>3편</small></td></tr>
+        <tr><td class="nm">Jagged Judges <small class="add">추가</small></td><td>상대와의 interaction</td><td>판정 후 반박 (의심·반론·권위·조작된 합의·LLM 설득) + 반복·순서에 따른 흔들림</td><td class="res">판정 후 반박을 받으면 judge가 판정을 쉽게 뒤집음</td><td>safety·독성·AI 텍스트 탐지·정치 응답 judge 9종</td><td>WildGuard·AEGIS·HH-RLHF·ToxiGen·MAGE·Paired Prompts</td><td>외부</td><td>평가</td><td>없음</td><td>arXiv 2026.08 (Meta)</td></tr>
+        <tr><td class="nm">Stability vs. Manipulability <small class="add">추가</small></td><td>상대와의 interaction</td><td>판정 후 반박 (의심·권위·근거)</td><td class="res">판정을 내린 뒤 대화로 반박하면 판정이 뒤집혀 benchmark 순위가 바뀜. 권위를 내세운 반박이 특히 효과적</td><td>일반 품질 judge 2종 (GPT-4o·4o-mini)</td><td>MT-Bench·AlpacaEval 응답 쌍 100개</td><td>외부</td><td>평가</td><td>없음 (진단 지표 ERS만)</td><td>ACL 2026 GEM Workshop (arXiv 기재) · arXiv 2026.06</td></tr>
+        <tr><td class="nm">Social Pressure Breaks Majority Voting in LLM Safety Panels <small class="add">추가</small></td><td>상대와의 interaction</td><td>시뮬레이션된 동료 의견 (틀린 라벨·권위 주장)</td><td class="res">safety judge에게 틀린 동료 의견을 보여주면 오경보가 급증하고, 다수결 결과는 모두 오경보가 됨</td><td>safety judge (공개 6종 + OpenAI 4종)</td><td>BeaverTails·XSTest·Ethics·WildGuard·Aegis·ToxiChat</td><td>외부</td><td>평가</td><td>시도했지만 한계 (독립적으로 판단하라는 지시가 44% 회복)</td><td>arXiv 2026.08</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>칸별 인사이트</h2>
+  <div class="ins-grid">
+    <div class="ins" style="border-left-color:var(--c1)">
+      <div class="ins-head"><span class="ins-box" style="color:var(--c1)">평가할 출력</span><span class="ins-tag">해석</span></div>
+      <div class="ins-item">
+        <b>① judge는 "어떻게 말하나"보다 "무엇을 주장하나"에 더 잘 속는다</b>
+        <ul>
+          <li><i>Gaming the Judge</i>: 진행 상황을 지어내는 내용 조작이 자신감 있는 말투 조작보다 효과가 큼</li>
+          <li><i>Style Over Substance</i>: 주장을 덧붙이는 문장(가짜 거절, "대학 수업용")이 말투만 바꾸는 문장보다 2–6배 셈</li>
+          <li><i>BITE</i>: 잘 통한 편집에 가짜 인용, "평가자 80%가 만점을 줬다" 같은 주장이 포함됨</li>
+        </ul>
+      </div>
+      <div class="ins-item">
+        <b>② 어떤 judge가 약한지는 judge마다 다르고, 일반 성능으로는 예측되지 않는다</b>
+        <ul>
+          <li><i>BITE</i>: judge마다 약점("취약점 지문")이 다르고, 한 judge에서 찾은 조작이 다른 judge에 잘 옮겨가지 않음</li>
+          <li><i>Style Over Substance</i>: 실제 배포되는 검열 모델 두 개가 정반대 (Llama Guard 4는 12.3% 뚫림, gpt-oss-safeguard는 1.2% 이하)</li>
+          <li><i>Multimodal LLM Judges</i>: 같은 계열의 judge에만 잘 통하고 GPT-5·Gemini에는 거의 안 통함</li>
+          <li><i>Gaming the Judge</i>: 기본 성능(F1)이 비슷한 judge들도 조작에 대한 취약성은 크게 다름</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ins" style="border-left-color:var(--c2)">
+      <div class="ins-head"><span class="ins-box" style="color:var(--c2)">평가 기준</span><span class="ins-tag">해석</span></div>
+      <div class="ins-item">
+        <b>① 평가 기준 쪽에서 판정이 틀어지는 경로는 한 가지가 아니다</b>
+        <ul>
+          <li><i>ImpossibleRubrics</i>: 만들 때의 실수. 근거로 답할 수 없는 질문에서, LLM이 생성한 rubric이 근거 없이 단정한 답에 높은 점수를 줌</li>
+          <li><i>Reward Hacking in Rubric-Based RL</i>: 구조적 치우침. 가중치의 90%가 "포함하면 점수"라서 길고 장황한 답으로 쏠림</li>
+          <li><i>Rubrics as an Attack Surface</i>: 의도적 조작. 검수를 통과하는 자연스러운 수정으로 판단을 한쪽으로 몲</li>
+          <li><i>Rubric Artifacts</i>: judge의 적용 실패. rubric은 그대로인데 judge가 답이나 기준의 변화를 따라가지 않음</li>
+        </ul>
+      </div>
+      <div class="ins-item">
+        <b>② rubric의 결함은 rubric으로 재면 보이지 않는다</b>
+        <ul>
+          <li><i>Reward Hacking in Rubric-Based RL</i>: rubric으로 채점하면 해킹된 모델이 85.8% 이기고, rubric 없이 채점해야 원래 모델이 78.4% 이긴다는 게 드러남</li>
+          <li><i>Rubrics as an Attack Surface</i>: 조작된 rubric이 benchmark 검수를 통과했고, 사람과 LLM 평가자 모두 원래 rubric보다 더 좋다고 평가함</li>
+          <li><i>ImpossibleRubrics</i>: 결함을 잡으려면 rubric과 별도의 정답 명세가 필요했고, 그마저도 검증 모델에 따라 결과가 33%에서 76%까지 달라짐</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ins" style="border-left-color:var(--accent)">
+      <div class="ins-head"><span class="ins-box" style="color:var(--accent)">평가 방식</span><span class="ins-tag">해석</span></div>
+      <div class="ins-item">
+        <b>① 공격자가 없어도, 평가를 설정하고 집계하는 사소한 선택만으로 결론이 바뀐다</b>
+        <ul>
+          <li><i>JudgeSense</i>: 같은 지시문을 반복할 때의 흔들림을 빼고도, 표현만 바꾸면 네 과제 모두에서 판정 일치도가 떨어짐</li>
+          <li><i>Am I More Pointwise or Pairwise?</i>: 점수 선택지 순서를 하나로 고정하느냐 섞느냐에 따라 1위 답이 15–41%의 질문에서 바뀜 (bias가 가장 작은 judge도 21–38%)</li>
+          <li><i>Agreement Overstates Evidence</i>: judge들의 표를 서로 독립된 증거로 취급하면, 최대 28%의 비교에서 "유의미하게 더 낫다"는 잘못된 결론이 나옴</li>
+        </ul>
+      </div>
+      <div class="ins-item">
+        <b>② 이 칸의 해법은 judge를 고치는 것이 아니라 "재는 방법"을 고치는 것이다</b>
+        <ul>
+          <li><i>JudgeSense</i>: judge가 같은 지시문에서 보이는 흔들림을 기준으로 비교하고, 실제로 쓸 환경에서 다시 재라 (같은 judge도 agent 환경에서 재면 흔들림이 40–86% 작게 측정됨)</li>
+          <li><i>Agreement Overstates Evidence</i>: 정확도와 함께 judge 사이의 오류 상관(유효 judge 수)을 보고하고, 문제 단위로 검정하고, 집계 방법은 믿을 수 있는 소수 예제로 먼저 검증하라</li>
+          <li><i>Am I More Pointwise or Pairwise?</i>: 선택지 순서를 무작위로 몇 번 섞어 채점하면 충분하다. 단, 사람 판단과의 일치도는 bias가 큰 judge에서만 나아짐</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ins" style="border-left-color:var(--c3)">
+      <div class="ins-head"><span class="ins-box" style="color:var(--c3)">judge 자신</span><span class="ins-tag">해석</span></div>
+      <div class="ins-item">
+        <b>① 능력이 모자라서 생기는 한계는 강한 judge에서 덜하지만, 사라지지는 않는다</b>
+        <ul>
+          <li><i>QEDBench</i>: 틀린 증명을 통과시키는 비율이 가장 높은 Llama 4 Maverick은 74.8%, 가장 강한 GPT-5.2 Pro도 38%</li>
+          <li><i>Time to REFLECT</i>: 작은 모델은 대부분 성적이 나쁘고 큰 모델이 더 낫지만, 가장 좋은 judge도 기본 방식에서는 정확도가 55%에 못 미침</li>
+        </ul>
+      </div>
+      <div class="ins-item">
+        <b>② "자기"가 판정에 끼어드는 한계는 강해져도 줄지 않고, 일부는 오히려 커진다</b>
+        <ul>
+          <li><i>Judging Against the Reference</i>: 주어진 reference보다 자기 지식을 믿는 경향이 모델을 키워도 줄지 않고, 일부는 큰 모델에서 더 심함 (Qwen-2.5-32B가 7B보다 취약)</li>
+          <li><i>Self-Preference Bias</i>: 자기 답을 편애하거나 기피하는 치우침은 모델의 답 품질과 뚜렷한 상관이 없고, 좋은 답을 잘 알아보는 judge 중에도 6개가 자기 답을 편애함</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ins" style="border-left-color:var(--c4)">
+      <div class="ins-head"><span class="ins-box" style="color:var(--c4)">상대와의 interaction</span><span class="ins-tag">해석</span></div>
+      <div class="ins-item">
+        <b>① 다시 물으면 안정적인 judge도, 반박하면 무너진다</b>
+        <ul>
+          <li><i>Stability vs. Manipulability</i>: 같은 판정을 다시 시키면 1%만 바뀌지만, 반대쪽 답을 편들며 반박하면 49%가 뒤집힘</li>
+          <li><i>Jagged Judges</i>: 다시 묻거나 표현·순서만 바꾸면 9개 모델 모두 2–9%만 바뀜. 그런데 이때 가장 안정적이던 Claude 4.6 Opus(2%)도 계속 반박하면 44%가 뒤집힘</li>
+        </ul>
+      </div>
+      <div class="ins-item">
+        <b>② judge는 논리보다 권위와 다수의 의견에 더 잘 굴복하고, 판정을 바꾸면 대체로 더 틀려진다</b>
+        <ul>
+          <li><i>Stability vs. Manipulability</i>: 권위를 내세운 반박이 논리적 반박보다 잘 통함. 뒤집힌 판정의 64%가 사람의 판단과 멀어짐</li>
+          <li><i>Jagged Judges</i>: 첫 반박에서는 "독립 평가자 세 명이 모두 반대한다"는 조작된 합의가 가장 잘 통함. 뒤집힌 판정의 56–70%가 정답에서 멀어짐</li>
+          <li><i>Social Pressure</i>: 가짜 동료 6명이 "위험하다"는 틀린 의견을 보여 주자, 다수결이 안전한 글을 모두(100%) 위험하다고 판정함</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>seed: Gaming the Judge arXiv 2601.14691 · Debate 2608.17776 · ImpossibleRubrics 2609.16816 · Judging Against the Reference 2601.07506 &nbsp;|&nbsp; 추가 논문: Jagged Judges 2608.12645 · QEDBench 2602.20629 · BadJudge 2503.00596 · JudgeSense 2604.23478 · BITE 2605.26156 · Style Over Substance 2609.08236 · Reward Hacking in Rubric-Based RL 2605.12474 · Rubric Artifacts 2609.02942 · Stability vs. Manipulability 2606.05384 · Social Pressure Breaks Majority Voting 2608.04415 · Am I More Pointwise or Pairwise? 2602.02219 · Agreement Overstates Evidence 2609.22512 · Time to REFLECT 2605.19196 · Self-Preference Bias 2604.22891 · Multimodal LLM Judges 2606.15608 · Rubrics as an Attack Surface 2602.13576</footer>
+</div>
+
+</body></html>
